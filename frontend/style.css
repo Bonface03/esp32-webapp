@@ -1,0 +1,79 @@
+/* General page styling */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f6f8;
+  margin: 0;
+  padding: 20px;
+  color: #333;
+}
+
+/* Headings */
+h1, h2, h3 {
+  text-align: center;
+  color: #222;
+}
+
+/* Login section */
+#loginSection {
+  max-width: 300px;
+  margin: 50px auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+#loginSection input {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+#loginSection button {
+  width: 100%;
+  padding: 10px;
+  background: #0078d7;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+#loginSection button:hover {
+  background: #005fa3;
+}
+
+/* Dashboard */
+#dashboard {
+  max-width: 800px;
+  margin: 20px auto;
+  text-align: center;
+}
+
+#cameraStream {
+  width: 100%;
+  max-width: 640px;
+  border: 2px solid #0078d7;
+  border-radius: 8px;
+  margin: 20px 0;
+}
+
+/* Admin controls */
+#adminControls {
+  margin-top: 20px;
+}
+
+#adminControls button {
+  padding: 10px 20px;
+  background: #28a745;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+#adminControls button:hover {
+  background: #1e7e34;
+}

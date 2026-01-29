@@ -32,7 +32,7 @@ def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(securit
 fake_users_db = {
     "admin": {
         "username": "admin",
-        "hashed_password": pwd_context.hash("password123"),
+        "hashed_password": "$2b$12$lNp7pKfWQ6v9hDi2hacQTOs3t0m04oVUvAbs8I4n.UgGm1HiKXjYK",
     }
 }
 

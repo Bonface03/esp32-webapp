@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ESP32 Web App</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>ESP32 Camera Dashboard</h1>
+
+  <!-- Login Section -->
+  <div id="loginSection">
+    <input type="text" id="username" placeholder="Username">
+    <input type="password" id="password" placeholder="Password">
+    <button onclick="login()">Login</button>
+  </div>
+
+  <!-- Dashboard -->
+  <div id="dashboard" style="display:none;">
+    <h2>Live Stream</h2>
+    <img id="cameraStream" src="" alt="ESP32 Camera Stream">
+
+    <div id="adminControls" style="display:none;">
+      <h3>Admin Controls</h3>
+      <button onclick="toggleLed()">Toggle LED</button>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
