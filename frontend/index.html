@@ -1,31 +1,258 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>ESP32 Web App</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VTA Surgery Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-  <h1>ESP32 Camera Dashboard</h1>
-
-  <!-- Login Section -->
-  <div id="loginSection">
-    <input type="text" id="username" placeholder="Username">
-    <input type="password" id="password" placeholder="Password">
-    <button onclick="login()">Login</button>
-  </div>
-
-  <!-- Dashboard -->
-  <div id="dashboard" style="display:none;">
-    <h2>Live Stream</h2>
-    <img id="cameraStream" src="" alt="ESP32 Camera Stream">
-
-    <div id="adminControls" style="display:none;">
-      <h3>Admin Controls</h3>
-      <button onclick="toggleLed()">Toggle LED</button>
+    <!-- Login Page -->
+    <div id="loginPage" class="login-page">
+        <div class="login-card">
+            <div class="login-header">
+                <i class="fas fa-user-md"></i>
+                <h2>VTA Surgery Login</h2>
+            </div>
+            
+            <div class="input-group">
+                <input type="text" id="username" placeholder="Username" autocomplete="off">
+            </div>
+            
+            <div class="input-group">
+                <input type="password" id="password" placeholder="Password" autocomplete="off">
+            </div>
+            
+            <button class="login-button" id="loginButton">
+                <i class="fas fa-sign-in-alt"></i>
+                Login to Dashboard
+            </button>
+            
+            <div class="login-footer">
+                <p>
+                    <i class="fas fa-info-circle"></i>
+                    Use any username/password for demo
+                </p>
+                <p>
+                    <i class="fas fa-user-shield"></i>
+                    Use "admin" for administrator access
+                </p>
+            </div>
+        </div>
     </div>
-  </div>
 
-  <script src="app.js"></script>
+    <!-- Dashboard -->
+    <div id="dashboardPage" class="container" style="display: none;">
+        <!-- Header -->
+        <header class="main-header">
+            <h1>Video Tele-Assistance Surgery</h1>
+            <p class="subtitle">Remote Surgical Assistance Platform</p>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="navbar">
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="#home" class="nav-link active" id="homeTab">
+                        <i class="fas fa-home"></i>
+                        Home
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#about" class="nav-link" id="aboutTab">
+                        <i class="fas fa-info-circle"></i>
+                        About Us
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#products" class="nav-link" id="productsTab">
+                        <i class="fas fa-box"></i>
+                        Products
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#contact" class="nav-link" id="contactTab">
+                        <i class="fas fa-address-book"></i>
+                        Contact Us
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#livestream" class="nav-link" id="livestreamTab">
+                        <i class="fas fa-video"></i>
+                        Livestream
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link logout-link" id="logoutButton">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Logout
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Search Bar -->
+        <div class="search-container">
+            <div class="search-box">
+                <input type="text" class="search-input" id="searchInput" placeholder="Search sections...">
+                <button class="search-btn" id="searchButton">
+                    <i class="fas fa-search"></i>
+                    Search
+                </button>
+            </div>
+        </div>
+
+        <!-- Divider -->
+        <div class="divider"></div>
+
+        <!-- Dashboard Cards -->
+        <div class="dashboard-grid">
+            <!-- Home Card -->
+            <div id="home" class="card">
+                <div class="card-header">
+                    <h2><i class="fas fa-home"></i> Welcome</h2>
+                </div>
+                <div class="card-body">
+                    <p id="welcomeMessage">Welcome to VTA Surgery Dashboard</p>
+                    <p class="card-text">Welcome to the VTA Surgery Dashboard. Access all surgical tools and patient data from this centralized platform.</p>
+                </div>
+                <div class="card-footer">
+                    <span class="status-indicator">
+                        <i class="fas fa-circle"></i>
+                        System Online
+                    </span>
+                    <span class="last-updated">
+                        <strong>Last updated:</strong> <span id="updateTime">Just now</span>
+                    </span>
+                </div>
+            </div>
+
+            <!-- About Us Card -->
+            <div id="about" class="card" style="display: none;">
+                <div class="card-header">
+                    <h2><i class="fas fa-info-circle"></i> About Us</h2>
+                </div>
+                <div class="card-body">
+                    <p>We build smart IoT solutions powered by ESP32 and FastAPI for telemedicine applications.</p>
+                    <p>Our VTA Surgery platform enables remote surgical assistance through real-time video streaming and IoT device control.</p>
+                    <div class="features-grid">
+                        <span class="feature-tag">Real-time Streaming</span>
+                        <span class="feature-tag">IoT Integration</span>
+                        <span class="feature-tag">Secure Access</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Products Card -->
+            <div id="products" class="card" style="display: none;">
+                <div class="card-header">
+                    <h2><i class="fas fa-box"></i> Our Products</h2>
+                </div>
+                <div class="card-body">
+                    <ul class="products-list">
+                        <li>
+                            <strong>Smart Home Controller</strong>
+                            <p>Complete home automation system with ESP32</p>
+                        </li>
+                        <li>
+                            <strong>ESP32 Sensor Kit</strong>
+                            <p>Medical-grade sensors for remote monitoring</p>
+                        </li>
+                        <li>
+                            <strong>Cloud Dashboard</strong>
+                            <p>Real-time analytics and control interface</p>
+                        </li>
+                        <li>
+                            <strong>Tele-Surgery Kit</strong>
+                            <p>Complete remote surgery assistance package</p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Contact Us Card -->
+            <div id="contact" class="card" style="display: none;">
+                <div class="card-header">
+                    <h2><i class="fas fa-address-book"></i> Contact Us</h2>
+                </div>
+                <div class="card-body">
+                    <div class="contact-info">
+                        <div class="contact-item">
+                            <i class="fas fa-envelope"></i>
+                            <div>
+                                <p class="contact-label">Email</p>
+                                <p class="contact-detail">support@vtasurgery.com</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-phone"></i>
+                            <div>
+                                <p class="contact-label">Phone</p>
+                                <p class="contact-detail">+263-123-456-789</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <div>
+                                <p class="contact-label">Address</p>
+                                <p class="contact-detail">123 Medical Center, Harare, Zimbabwe</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Livestream Card -->
+            <div id="livestream" class="card" style="display: none;">
+                <div class="card-header">
+                    <h2><i class="fas fa-video"></i> Live Stream</h2>
+                    <div class="stream-controls">
+                        <button class="stream-btn start" id="startStreamBtn">
+                            <i class="fas fa-play"></i>
+                            Start
+                        </button>
+                        <button class="stream-btn stop" id="stopStreamBtn">
+                            <i class="fas fa-stop"></i>
+                            Stop
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="stream-placeholder" id="streamPlaceholder">
+                        <i class="fas fa-video-slash"></i>
+                        <h3>Stream Offline</h3>
+                        <p>Click "Start" to begin live video feed</p>
+                    </div>
+                    <img id="cameraStream" src="" alt="ESP32 Camera Stream" style="display: none;">
+                </div>
+            </div>
+
+            <!-- Admin Controls Card -->
+            <div id="adminControls" class="card" style="display: none;">
+                <div class="card-header">
+                    <h2><i class="fas fa-cogs"></i> Admin Controls</h2>
+                </div>
+                <div class="card-body">
+                    <div class="control-grid">
+                        <button class="control-btn led" id="toggleLEDBtn">
+                            <i class="fas fa-lightbulb"></i>
+                            <span>Toggle LED</span>
+                        </button>
+                        <button class="control-btn reboot" id="rebootBtn">
+                            <i class="fas fa-redo"></i>
+                            <span>Reboot Device</span>
+                        </button>
+                        <button class="control-btn calibrate" id="calibrateBtn">
+                            <i class="fas fa-camera-retro"></i>
+                            <span>Calibrate Camera</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
 </body>
 </html>

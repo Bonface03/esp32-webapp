@@ -1,79 +1,590 @@
-/* General page styling */
+/* ==================== RESET & BASE ==================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 body {
-  font-family: Arial, sans-serif;
-  background-color: #f4f6f8;
-  margin: 0;
-  padding: 20px;
-  color: #333;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background-color: #f8fafc;
+    color: #1e293b;
+    line-height: 1.6;
 }
 
-/* Headings */
-h1, h2, h3 {
-  text-align: center;
-  color: #222;
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
 }
 
-/* Login section */
-#loginSection {
-  max-width: 300px;
-  margin: 50px auto;
-  padding: 20px;
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+/* ==================== LOGIN PAGE ==================== */
+.login-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 20px;
 }
 
-#loginSection input {
-  width: 100%;
-  padding: 10px;
-  margin: 8px 0;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+.login-card {
+    background: white;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+    border: 1px solid #e2e8f0;
 }
 
-#loginSection button {
-  width: 100%;
-  padding: 10px;
-  background: #0078d7;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
+.login-header {
+    text-align: center;
+    margin-bottom: 30px;
 }
 
-#loginSection button:hover {
-  background: #005fa3;
+.login-header i {
+    font-size: 3rem;
+    color: #2563eb;
+    margin-bottom: 15px;
 }
 
-/* Dashboard */
-#dashboard {
-  max-width: 800px;
-  margin: 20px auto;
-  text-align: center;
+.login-header h2 {
+    font-size: 1.75rem;
+    color: #1e293b;
+    font-weight: 600;
 }
 
-#cameraStream {
-  width: 100%;
-  max-width: 640px;
-  border: 2px solid #0078d7;
-  border-radius: 8px;
-  margin: 20px 0;
+.input-group {
+    margin-bottom: 20px;
 }
 
-/* Admin controls */
-#adminControls {
-  margin-top: 20px;
+.input-group input {
+    width: 100%;
+    padding: 14px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.2s ease;
 }
 
-#adminControls button {
-  padding: 10px 20px;
-  background: #28a745;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
+.input-group input:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
-#adminControls button:hover {
-  background: #1e7e34;
+.login-button {
+    width: 100%;
+    padding: 14px;
+    background: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.login-button:hover {
+    background: #1d4ed8;
+}
+
+.login-footer {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #e2e8f0;
+    text-align: center;
+}
+
+.login-footer p {
+    color: #64748b;
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.login-footer i {
+    color: #2563eb;
+}
+
+/* ==================== HEADER ==================== */
+.main-header {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    color: white;
+    padding: 30px;
+    border-radius: 12px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.main-header h1 {
+    font-size: 2.5rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.subtitle {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    font-weight: 400;
+}
+
+/* ==================== NAVIGATION ==================== */
+.navbar {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 25px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e2e8f0;
+}
+
+.nav-menu {
+    display: flex;
+    list-style: none;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.nav-item {
+    position: relative;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: #475569;
+    font-weight: 500;
+    padding: 10px 20px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.nav-link:hover {
+    background-color: #f1f5f9;
+    color: #2563eb;
+}
+
+.nav-link.active {
+    background-color: #2563eb;
+    color: white;
+}
+
+.nav-link i {
+    font-size: 1.1rem;
+}
+
+.logout-link {
+    color: #ef4444 !important;
+}
+
+.logout-link:hover {
+    background-color: #fee2e2 !important;
+    color: #dc2626 !important;
+}
+
+/* ==================== SEARCH BAR ==================== */
+.search-container {
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 25px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e2e8f0;
+}
+
+.search-box {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.search-input {
+    flex: 1;
+    padding: 14px 20px;
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 1rem;
+    transition: border-color 0.2s ease;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.search-btn {
+    padding: 14px 28px;
+    background: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+}
+
+.search-btn:hover {
+    background: #1d4ed8;
+}
+
+/* ==================== DIVIDER ==================== */
+.divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #e2e8f0, transparent);
+    margin: 30px 0;
+}
+
+/* ==================== CARDS ==================== */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 25px;
+    margin-bottom: 40px;
+}
+
+.card {
+    background: white;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e2e8f0;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #e2e8f0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1e293b;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.card h2 i {
+    color: #2563eb;
+}
+
+.card-body {
+    flex: 1;
+    margin-bottom: 25px;
+}
+
+.card-footer {
+    padding-top: 20px;
+    border-top: 1px solid #e2e8f0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-text {
+    color: #475569;
+    margin-bottom: 15px;
+}
+
+#welcomeMessage {
+    font-size: 1.25rem;
+    color: #2563eb;
+    font-weight: 500;
+    margin-bottom: 15px;
+}
+
+.status-indicator {
+    background: #dcfce7;
+    color: #16a34a;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.last-updated {
+    color: #64748b;
+    font-size: 0.9rem;
+}
+
+/* ==================== ABOUT CARD ==================== */
+.features-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.feature-tag {
+    background: #e0f2fe;
+    color: #0369a1;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+/* ==================== PRODUCTS CARD ==================== */
+.products-list {
+    list-style: none;
+}
+
+.products-list li {
+    padding: 15px 0;
+    border-bottom: 1px solid #e2e8f0;
+    color: #475569;
+}
+
+.products-list li:last-child {
+    border-bottom: none;
+}
+
+.products-list li strong {
+    color: #1e293b;
+    display: block;
+    margin-bottom: 5px;
+    font-size: 1.1rem;
+}
+
+.products-list li p {
+    color: #64748b;
+    font-size: 0.95rem;
+}
+
+/* ==================== CONTACT CARD ==================== */
+.contact-info {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.contact-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    padding: 15px;
+    border-radius: 8px;
+    transition: background-color 0.2s ease;
+    background: #f8fafc;
+}
+
+.contact-item:hover {
+    background: #f1f5f9;
+}
+
+.contact-item i {
+    color: #2563eb;
+    font-size: 1.5rem;
+    margin-top: 3px;
+}
+
+.contact-label {
+    font-weight: 500;
+    color: #1e293b;
+    margin-bottom: 5px;
+    font-size: 1.1rem;
+}
+
+.contact-detail {
+    color: #475569;
+    font-size: 1rem;
+}
+
+/* ==================== LIVESTREAM CARD ==================== */
+.stream-controls {
+    display: flex;
+    gap: 10px;
+}
+
+.stream-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.stream-btn.start {
+    background: #10b981;
+    color: white;
+}
+
+.stream-btn.start:hover {
+    background: #0da271;
+}
+
+.stream-btn.stop {
+    background: #ef4444;
+    color: white;
+}
+
+.stream-btn.stop:hover {
+    background: #dc2626;
+}
+
+.stream-placeholder {
+    background: #f1f5f9;
+    border: 2px dashed #cbd5e1;
+    border-radius: 10px;
+    padding: 60px 20px;
+    text-align: center;
+    color: #64748b;
+    margin-bottom: 20px;
+}
+
+.stream-placeholder i {
+    font-size: 3rem;
+    margin-bottom: 15px;
+    color: #94a3b8;
+}
+
+.stream-placeholder h3 {
+    margin-bottom: 10px;
+    color: #475569;
+    font-size: 1.5rem;
+}
+
+/* ==================== ADMIN CONTROLS CARD ==================== */
+.control-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+}
+
+.control-btn {
+    padding: 20px;
+    border: none;
+    border-radius: 10px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-size: 1.1rem;
+}
+
+.control-btn.led {
+    background: #fef3c7;
+    color: #d97706;
+    border: 2px solid #fbbf24;
+}
+
+.control-btn.led:hover {
+    background: #fde68a;
+}
+
+.control-btn.reboot {
+    background: #dbeafe;
+    color: #1d4ed8;
+    border: 2px solid #3b82f6;
+}
+
+.control-btn.reboot:hover {
+    background: #bfdbfe;
+}
+
+.control-btn.calibrate {
+    background: #e0f2fe;
+    color: #0369a1;
+    border: 2px solid #0ea5e9;
+}
+
+.control-btn.calibrate:hover {
+    background: #bae6fd;
+}
+
+/* ==================== RESPONSIVE DESIGN ==================== */
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+
+    .main-header {
+        padding: 25px 20px;
+    }
+
+    .main-header h1 {
+        font-size: 2rem;
+    }
+
+    .nav-menu {
+        gap: 10px;
+    }
+
+    .nav-link {
+        padding: 8px 16px;
+        font-size: 0.9rem;
+    }
+
+    .search-box {
+        flex-direction: column;
+    }
+
+    .search-input,
+    .search-btn {
+        width: 100%;
+    }
+
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .card {
+        padding: 25px 20px;
+    }
+
+    .card-header {
+        flex-direction: column;
+        gap: 15px;
+        align-items: flex-start;
+    }
+
+    .stream-controls {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .login-card {
+        padding: 30px 20px;
+    }
 }
