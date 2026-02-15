@@ -1,3 +1,86 @@
+/* ==================== BACKGROUND SLIDESHOW ==================== */
+.background-slideshow {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    overflow: hidden;
+}
+
+.background-images {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.background-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0;
+    animation: slideshow 32s infinite;
+    /* Changed from 24s to 32s for 4 images */
+}
+
+/* Image 1 - Surgical Room */
+.background-image:nth-child(1) {
+    background-image: url('https://images.unsplash.com/photo-1551601651-2a8555f1a136?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');
+    animation-delay: 0s;
+}
+
+/* Image 2 - Medical Technology */
+.background-image:nth-child(2) {
+    background-image: url('https://images.unsplash.com/photo-1579684385127-1ef15d508118?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');
+    animation-delay: 8s;
+}
+
+/* Image 3 - Hospital (REPLACED WITH WORKING URL) */
+.background-image:nth-child(3) {
+    background-image: url('https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');
+    animation-delay: 16s;
+}
+
+/* Image 4 - Medical Equipment */
+.background-image:nth-child(4) {
+    background-image: url('https://images.unsplash.com/photo-1582750433449-648ed127bb54?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');
+    animation-delay: 24s;
+}
+
+/* Improved slideshow animation - smoother transitions */
+@keyframes slideshow {
+    0% {
+        opacity: 0;
+        transform: scale(1.02);
+    }
+
+    5% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    20% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    25% {
+        opacity: 0;
+        transform: scale(1.02);
+    }
+
+    100% {
+        opacity: 0;
+        transform: scale(1.02);
+    }
+}
+
 /* ==================== RESET & BASE ==================== */
 * {
     margin: 0;
@@ -7,15 +90,19 @@
 
 body {
     font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-    background-color: #f8fafc;
     color: #1e293b;
     line-height: 1.6;
+    position: relative;
+    overflow-x: hidden;
+    min-height: 100vh;
 }
 
 .container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
+    position: relative;
+    z-index: 1;
 }
 
 /* ==================== LOGIN PAGE ==================== */
@@ -24,18 +111,19 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     padding: 20px;
+    position: relative;
 }
 
 .login-card {
-    background: white;
+    background: rgba(255, 255, 255, 0.95);
     padding: 40px;
     border-radius: 12px;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
     width: 100%;
     max-width: 400px;
     border: 1px solid #e2e8f0;
+    backdrop-filter: blur(10px);
 }
 
 .login-header {
@@ -66,12 +154,14 @@ body {
     border-radius: 8px;
     font-size: 1rem;
     transition: all 0.2s ease;
+    background: rgba(255, 255, 255, 0.9);
 }
 
 .input-group input:focus {
     outline: none;
     border-color: #2563eb;
     box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    background: white;
 }
 
 .login-button {
@@ -119,12 +209,13 @@ body {
 
 /* ==================== HEADER ==================== */
 .main-header {
-    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.95) 0%, rgba(29, 78, 216, 0.95) 100%);
     color: white;
     padding: 30px;
     border-radius: 12px;
     margin-bottom: 30px;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .main-header h1 {
@@ -141,12 +232,13 @@ body {
 
 /* ==================== NAVIGATION ==================== */
 .navbar {
-    background: white;
+    background: rgba(255, 255, 255, 0.95);
     border-radius: 12px;
     padding: 20px;
     margin-bottom: 25px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     border: 1px solid #e2e8f0;
+    backdrop-filter: blur(10px);
 }
 
 .nav-menu {
@@ -174,7 +266,7 @@ body {
 }
 
 .nav-link:hover {
-    background-color: #f1f5f9;
+    background-color: rgba(241, 245, 249, 0.8);
     color: #2563eb;
 }
 
@@ -192,18 +284,19 @@ body {
 }
 
 .logout-link:hover {
-    background-color: #fee2e2 !important;
+    background-color: rgba(254, 226, 226, 0.8) !important;
     color: #dc2626 !important;
 }
 
 /* ==================== SEARCH BAR ==================== */
 .search-container {
-    background: white;
+    background: rgba(255, 255, 255, 0.95);
     border-radius: 12px;
     padding: 25px;
     margin-bottom: 25px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     border: 1px solid #e2e8f0;
+    backdrop-filter: blur(10px);
 }
 
 .search-box {
@@ -219,12 +312,14 @@ body {
     border-radius: 10px;
     font-size: 1rem;
     transition: border-color 0.2s ease;
+    background: rgba(255, 255, 255, 0.9);
 }
 
 .search-input:focus {
     outline: none;
     border-color: #2563eb;
     box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    background: white;
 }
 
 .search-btn {
@@ -262,7 +357,7 @@ body {
 }
 
 .card {
-    background: white;
+    background: rgba(255, 255, 255, 0.95);
     border-radius: 12px;
     padding: 30px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
@@ -270,6 +365,7 @@ body {
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     display: flex;
     flex-direction: column;
+    backdrop-filter: blur(10px);
 }
 
 .card:hover {
@@ -325,7 +421,7 @@ body {
 }
 
 .status-indicator {
-    background: #dcfce7;
+    background: rgba(220, 252, 231, 0.9);
     color: #16a34a;
     padding: 8px 16px;
     border-radius: 20px;
@@ -350,7 +446,7 @@ body {
 }
 
 .feature-tag {
-    background: #e0f2fe;
+    background: rgba(224, 242, 254, 0.9);
     color: #0369a1;
     padding: 10px 20px;
     border-radius: 20px;
@@ -399,11 +495,11 @@ body {
     padding: 15px;
     border-radius: 8px;
     transition: background-color 0.2s ease;
-    background: #f8fafc;
+    background: rgba(248, 250, 252, 0.9);
 }
 
 .contact-item:hover {
-    background: #f1f5f9;
+    background: rgba(241, 245, 249, 0.9);
 }
 
 .contact-item i {
@@ -424,7 +520,7 @@ body {
     font-size: 1rem;
 }
 
-/* ==================== LIVESTREAM CARD ==================== */
+/* ==================== LIVESTREAM CARD - UPDATED ==================== */
 .stream-controls {
     display: flex;
     gap: 10px;
@@ -447,7 +543,7 @@ body {
     color: white;
 }
 
-.stream-btn.start:hover {
+.stream-btn.start:hover:not(:disabled) {
     background: #0da271;
 }
 
@@ -456,30 +552,364 @@ body {
     color: white;
 }
 
-.stream-btn.stop:hover {
+.stream-btn.stop:hover:not(:disabled) {
     background: #dc2626;
 }
 
-.stream-placeholder {
-    background: #f1f5f9;
-    border: 2px dashed #cbd5e1;
+.stream-btn.capture {
+    background: #ffc107;
+    color: #212529;
+}
+
+.stream-btn.capture:hover:not(:disabled) {
+    background: #e0a800;
+}
+
+.stream-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Stream Controls Panel */
+.stream-controls-panel {
+    background: rgba(248, 250, 252, 0.9);
     border-radius: 10px;
-    padding: 60px 20px;
-    text-align: center;
-    color: #64748b;
+    padding: 20px;
+    margin-bottom: 20px;
+    border: 1px solid #e2e8f0;
+    backdrop-filter: blur(10px);
+}
+
+.quality-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.quality-controls label {
+    font-weight: 600;
+    color: #475569;
+    font-size: 14px;
+}
+
+.quality-controls select {
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid #e2e8f0;
+    background: white;
+    color: #1e293b;
+    min-width: 150px;
+    font-size: 14px;
+}
+
+.stream-status {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 15px;
+    border-top: 1px solid #e2e8f0;
+}
+
+#connectionStatus {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+}
+
+.status-online {
+    color: #10b981;
+    animation: pulse 2s infinite;
+}
+
+.status-offline {
+    color: #ef4444;
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+#streamStats {
+    font-family: 'Courier New', monospace;
+    background: rgba(0, 0, 0, 0.05);
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    color: #475569;
+}
+
+/* Stream Container */
+.stream-container {
+    position: relative;
+    background: #000;
+    border-radius: 12px;
+    overflow: hidden;
+    min-height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.stream-loading {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 10;
+    color: white;
+}
+
+.loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid rgba(255, 255, 255, 0.1);
+    border-top: 5px solid #2563eb;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
     margin-bottom: 20px;
 }
 
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.stream-placeholder {
+    text-align: center;
+    padding: 40px 20px;
+    color: #64748b;
+    background: rgba(241, 245, 249, 0.9);
+    border: 2px dashed #cbd5e1;
+    border-radius: 10px;
+    margin: 20px;
+    width: calc(100% - 40px);
+}
+
 .stream-placeholder i {
-    font-size: 3rem;
-    margin-bottom: 15px;
+    font-size: 60px;
+    margin-bottom: 20px;
     color: #94a3b8;
+    opacity: 0.5;
 }
 
 .stream-placeholder h3 {
     margin-bottom: 10px;
     color: #475569;
     font-size: 1.5rem;
+}
+
+.stream-placeholder p {
+    margin-bottom: 20px;
+    color: #64748b;
+}
+
+.ip-input-container {
+    margin-top: 30px;
+    display: flex;
+    gap: 10px;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#esp32IP {
+    flex: 1;
+    padding: 12px 15px;
+    border-radius: 8px;
+    border: 2px solid #e2e8f0;
+    background: white;
+    color: #1e293b;
+    font-size: 16px;
+}
+
+.ip-btn {
+    padding: 12px 20px;
+    background: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+    font-weight: 500;
+}
+
+.ip-btn:hover {
+    background: #1d4ed8;
+    transform: translateY(-2px);
+}
+
+/* Stream Display */
+.stream-display {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+#cameraStream {
+    width: 100%;
+    height: auto;
+    max-height: 500px;
+    object-fit: contain;
+    background: #000;
+}
+
+.stream-overlay {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-end;
+}
+
+#liveIndicator {
+    background: rgba(220, 53, 69, 0.8);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    backdrop-filter: blur(5px);
+}
+
+#liveIndicator i {
+    font-size: 8px;
+    animation: blink 1.5s infinite;
+}
+
+@keyframes blink {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.3;
+    }
+}
+
+#resolutionIndicator {
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 4px 10px;
+    border-radius: 15px;
+    font-size: 11px;
+    backdrop-filter: blur(5px);
+}
+
+/* Photo Preview */
+.photo-preview {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    z-index: 20;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.photo-preview h4 {
+    color: white;
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+}
+
+#capturedPhoto {
+    max-width: 90%;
+    max-height: 70%;
+    object-fit: contain;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    background: #000;
+}
+
+.photo-actions {
+    display: flex;
+    gap: 15px;
+}
+
+.photo-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.photo-btn:nth-child(1) {
+    background: #2563eb;
+    color: white;
+}
+
+.photo-btn:nth-child(1):hover {
+    background: #1d4ed8;
+}
+
+.photo-btn:nth-child(2) {
+    background: #6c757d;
+    color: white;
+}
+
+.photo-btn:nth-child(2):hover {
+    background: #545b62;
+}
+
+/* Device Info */
+.device-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    color: #64748b;
+    padding-top: 15px;
+    border-top: 1px solid #e2e8f0;
+}
+
+.device-info span {
+    display: flex;
+    align-items: center;
+    gap: 6px;
 }
 
 /* ==================== ADMIN CONTROLS CARD ==================== */
@@ -504,33 +934,173 @@ body {
 }
 
 .control-btn.led {
-    background: #fef3c7;
+    background: rgba(254, 243, 199, 0.9);
     color: #d97706;
     border: 2px solid #fbbf24;
 }
 
 .control-btn.led:hover {
-    background: #fde68a;
+    background: rgba(253, 230, 138, 0.9);
 }
 
 .control-btn.reboot {
-    background: #dbeafe;
+    background: rgba(219, 234, 254, 0.9);
     color: #1d4ed8;
     border: 2px solid #3b82f6;
 }
 
 .control-btn.reboot:hover {
-    background: #bfdbfe;
+    background: rgba(191, 219, 254, 0.9);
 }
 
 .control-btn.calibrate {
-    background: #e0f2fe;
+    background: rgba(224, 242, 254, 0.9);
     color: #0369a1;
     border: 2px solid #0ea5e9;
 }
 
 .control-btn.calibrate:hover {
-    background: #bae6fd;
+    background: rgba(186, 230, 253, 0.9);
+}
+
+/* ==================== NOTIFICATIONS ==================== */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 20px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.95);
+    color: #1e293b;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transform: translateX(150%);
+    transition: transform 0.3s ease-out;
+    z-index: 1000;
+    max-width: 350px;
+    border-left: 4px solid;
+    backdrop-filter: blur(10px);
+    border: 1px solid #e2e8f0;
+}
+
+.notification.show {
+    transform: translateX(0);
+}
+
+.notification-success {
+    border-left-color: #10b981;
+}
+
+.notification-error {
+    border-left-color: #ef4444;
+}
+
+.notification-info {
+    border-left-color: #3b82f6;
+}
+
+.notification i {
+    font-size: 18px;
+}
+
+.notification-success i {
+    color: #10b981;
+}
+
+.notification-error i {
+    color: #ef4444;
+}
+
+.notification-info i {
+    color: #3b82f6;
+}
+
+/* ==================== WHATSAPP FLOATING BUTTON ==================== */
+.whatsapp-float {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    background-color: #25D366;
+    color: white;
+    border-radius: 50%;
+    text-align: center;
+    font-size: 30px;
+    box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    animation: float 3s ease-in-out infinite;
+}
+
+.whatsapp-float:hover {
+    background-color: #128C7E;
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(37, 211, 102, 0.5);
+}
+
+.whatsapp-float i {
+    margin-top: 2px;
+}
+
+/* Floating animation */
+@keyframes float {
+    0% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+/* Optional: Add tooltip on hover */
+.whatsapp-float::after {
+    content: 'Chat with us on WhatsApp';
+    position: absolute;
+    right: 70px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.whatsapp-float:hover::after {
+    opacity: 1;
+}
+
+/* For mobile responsiveness */
+@media (max-width: 768px) {
+    .whatsapp-float {
+        width: 50px;
+        height: 50px;
+        font-size: 26px;
+        bottom: 20px;
+        right: 20px;
+    }
+
+    .whatsapp-float::after {
+        content: 'WhatsApp';
+        right: 60px;
+        font-size: 12px;
+    }
 }
 
 /* ==================== RESPONSIVE DESIGN ==================== */
@@ -582,9 +1152,57 @@ body {
     .stream-controls {
         width: 100%;
         justify-content: flex-start;
+        flex-wrap: wrap;
     }
 
     .login-card {
         padding: 30px 20px;
+    }
+
+    /* Mobile adjustments for streaming */
+    .quality-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .quality-controls select {
+        width: 100%;
+    }
+
+    .stream-status {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+    }
+
+    .device-info {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+    }
+
+    .ip-input-container {
+        flex-direction: column;
+    }
+
+    .ip-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .stream-controls-panel {
+        padding: 15px;
+    }
+
+    .stream-placeholder {
+        margin: 10px;
+        width: calc(100% - 20px);
+        padding: 30px 15px;
+    }
+
+    .stream-controls {
+        justify-content: center;
     }
 }

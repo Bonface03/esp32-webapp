@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,7 +8,18 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
+
 <body>
+    <!-- Background Slideshow -->
+    <div class="background-slideshow">
+        <div class="background-images">
+            <div class="background-image"></div>
+            <div class="background-image"></div>
+            <div class="background-image"></div>
+            <div class="background-image"></div>
+        </div>
+    </div>
+
     <!-- Login Page -->
     <div id="loginPage" class="login-page">
         <div class="login-card">
@@ -15,20 +27,20 @@
                 <i class="fas fa-user-md"></i>
                 <h2>VTA Surgery Login</h2>
             </div>
-            
+
             <div class="input-group">
                 <input type="text" id="username" placeholder="Username" autocomplete="off">
             </div>
-            
+
             <div class="input-group">
                 <input type="password" id="password" placeholder="Password" autocomplete="off">
             </div>
-            
+
             <button class="login-button" id="loginButton">
                 <i class="fas fa-sign-in-alt"></i>
                 Login to Dashboard
             </button>
-            
+
             <div class="login-footer">
                 <p>
                     <i class="fas fa-info-circle"></i>
@@ -115,7 +127,8 @@
                 </div>
                 <div class="card-body">
                     <p id="welcomeMessage">Welcome to VTA Surgery Dashboard</p>
-                    <p class="card-text">Welcome to the VTA Surgery Dashboard. Access all surgical tools and patient data from this centralized platform.</p>
+                    <p class="card-text">Welcome to the VTA Surgery Dashboard. Access all surgical tools and patient
+                        data from this centralized platform.</p>
                 </div>
                 <div class="card-footer">
                     <span class="status-indicator">
@@ -135,7 +148,8 @@
                 </div>
                 <div class="card-body">
                     <p>We build smart IoT solutions powered by ESP32 and FastAPI for telemedicine applications.</p>
-                    <p>Our VTA Surgery platform enables remote surgical assistance through real-time video streaming and IoT device control.</p>
+                    <p>Our VTA Surgery platform enables remote surgical assistance through real-time video streaming and
+                        IoT device control.</p>
                     <div class="features-grid">
                         <span class="feature-tag">Real-time Streaming</span>
                         <span class="feature-tag">IoT Integration</span>
@@ -210,21 +224,115 @@
                     <div class="stream-controls">
                         <button class="stream-btn start" id="startStreamBtn">
                             <i class="fas fa-play"></i>
-                            Start
+                            Start Stream
                         </button>
-                        <button class="stream-btn stop" id="stopStreamBtn">
+                        <button class="stream-btn stop" id="stopStreamBtn" disabled>
                             <i class="fas fa-stop"></i>
-                            Stop
+                            Stop Stream
+                        </button>
+                        <button class="stream-btn capture" id="captureBtn" disabled>
+                            <i class="fas fa-camera"></i>
+                            Capture Photo
                         </button>
                     </div>
                 </div>
                 <div class="card-body">
-                    <div class="stream-placeholder" id="streamPlaceholder">
-                        <i class="fas fa-video-slash"></i>
-                        <h3>Stream Offline</h3>
-                        <p>Click "Start" to begin live video feed</p>
+                    <div class="stream-controls-panel">
+                        <div class="quality-controls">
+                            <label for="qualitySelect">Quality:</label>
+                            <select id="qualitySelect">
+                                <option value="20">Fast (Low Quality)</option>
+                                <option value="15">Balanced</option>
+                                <option value="10" selected>Good</option>
+                                <option value="5">High Quality</option>
+                                <option value="2">Best Quality</option>
+                            </select>
+
+                            <label for="resolutionSelect">Resolution:</label>
+                            <select id="resolutionSelect">
+                                <option value="10">QVGA (320x240)</option>
+                                <option value="8">VGA (640x480)</option>
+                                <option value="7">SVGA (800x600)</option>
+                                <option value="6">XGA (1024x768)</option>
+                                <option value="5" selected>HD (1280x720)</option>
+                                <option value="3">UXGA (1600x1200)</option>
+                            </select>
+
+                            <label for="fpsSelect">FPS:</label>
+                            <select id="fpsSelect">
+                                <option value="33">30 FPS</option>
+                                <option value="50" selected>20 FPS</option>
+                                <option value="100">10 FPS</option>
+                                <option value="200">5 FPS</option>
+                            </select>
+                        </div>
+
+                        <div class="stream-status">
+                            <span id="connectionStatus">
+                                <i class="fas fa-circle status-offline"></i>
+                                Disconnected
+                            </span>
+                            <span id="streamStats">FPS: -- | Delay: --ms</span>
+                        </div>
                     </div>
-                    <img id="cameraStream" src="" alt="ESP32 Camera Stream" style="display: none;">
+
+                    <div class="stream-container">
+                        <!-- Loading indicator -->
+                        <div class="stream-loading" id="streamLoading" style="display: none;">
+                            <div class="loading-spinner"></div>
+                            <p>Connecting to camera...</p>
+                        </div>
+
+                        <!-- Placeholder when stream is off -->
+                        <div class="stream-placeholder" id="streamPlaceholder">
+                            <i class="fas fa-video-slash"></i>
+                            <h3>Stream Offline</h3>
+                            <p>Enter ESP32 IP Address and click "Start Stream"</p>
+
+                            <div class="ip-input-container">
+                                <input type="text" id="esp32IP" placeholder="192.168.x.x" value="">
+                                <button class="ip-btn" id="detectBtn">
+                                    <i class="fas fa-wifi"></i>
+                                    Auto-Detect
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Video stream image -->
+                        <div class="stream-display" id="streamDisplay" style="display: none;">
+                            <img id="cameraStream" src="" alt="Live Camera Feed" crossorigin="anonymous">
+                            <div class="stream-overlay">
+                                <span id="liveIndicator">
+                                    <i class="fas fa-circle"></i>
+                                    LIVE
+                                </span>
+                                <span id="resolutionIndicator">HD</span>
+                            </div>
+                        </div>
+
+                        <!-- Captured photo display -->
+                        <div class="photo-preview" id="photoPreview" style="display: none;">
+                            <h4>Captured Photo</h4>
+                            <img id="capturedPhoto" src="" alt="Captured Photo">
+                            <div class="photo-actions">
+                                <button class="photo-btn" id="downloadBtn">
+                                    <i class="fas fa-download"></i>
+                                    Download
+                                </button>
+                                <button class="photo-btn" id="closePreviewBtn">
+                                    <i class="fas fa-times"></i>
+                                    Close
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="device-info">
+                        <span><i class="fas fa-microchip"></i> ESP32-CAM</span>
+                        <span id="deviceIP">IP: Not connected</span>
+                        <span id="streamQuality">Quality: Good</span>
+                    </div>
                 </div>
             </div>
 
@@ -253,6 +361,14 @@
         </div>
     </div>
 
+    <!-- WhatsApp Floating Button -->
+    <a href="https://wa.me/+263715067366?text=Hello%2C%20please%20let%20us%20know%20how%20we%20can%20help%20you"
+        class="whatsapp-float" target="_blank">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <!-- Link to your separate app.js file -->
     <script src="app.js"></script>
 </body>
+
 </html>
