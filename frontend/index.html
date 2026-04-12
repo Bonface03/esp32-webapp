@@ -287,15 +287,7 @@
                         <div class="stream-placeholder" id="streamPlaceholder">
                             <i class="fas fa-video-slash"></i>
                             <h3>Stream Offline</h3>
-                            <p>Enter ESP32 IP Address and click "Start Stream"</p>
-
-                            <div class="ip-input-container">
-                                <input type="text" id="esp32IP" placeholder="192.168.x.x" value="">
-                                <button class="ip-btn" id="detectBtn">
-                                    <i class="fas fa-wifi"></i>
-                                    Auto-Detect
-                                </button>
-                            </div>
+                            <p>Click "Start Stream" to connect to the Relay Server</p>
                         </div>
 
                         <!-- Video stream image -->
@@ -330,7 +322,7 @@
                 <div class="card-footer">
                     <div class="device-info">
                         <span><i class="fas fa-microchip"></i> ESP32-CAM</span>
-                        <span id="deviceIP">IP: Not connected</span>
+                        <span id="deviceIP">Status: Disconnected</span>
                         <span id="streamQuality">Quality: Good</span>
                     </div>
                 </div>

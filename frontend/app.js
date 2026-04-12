@@ -28,9 +28,8 @@ const searchInput = document.getElementById('searchInput');
 const searchButton = document.getElementById('searchButton');
 
 // ============ STREAMING VARIABLES ============
-let streamInterval = null;
+let streamSocket = null;
 let isStreaming = false;
-let esp32IP = "";
 let frameTimes = [];
 
 // ============ STREAMING ELEMENTS ============
@@ -319,202 +318,85 @@ function initStreaming() {
     console.log('Streaming functionality initialized');
 }
 
-// Auto-detect ESP32 on local network
-async function detectESP32() {
-    showNotification('Scanning network for ESP32...', 'info');
 
-    // Try common ESP32-CAM IP addresses
-    const commonIPs = [
-        '192.168.1.100',
-        '192.168.1.101',
-        '192.168.1.102',
-        '192.168.4.1',  // ESP32 AP mode
-        '192.168.0.100',
-        '192.168.0.101',
-        '192.168.137.100'  // For USB tethering
-    ];
-
-    for (const ip of commonIPs) {
-        try {
-            // Create a test image
-            const testImg = new Image();
-            testImg.src = `http://${ip}/stream?q=20&r=10&t=${Date.now()}`;
-
-            // Wait for image to load or timeout
-            await new Promise((resolve, reject) => {
-                testImg.onload = () => resolve(true);
-                testImg.onerror = () => reject();
-                setTimeout(() => reject(), 1000);
-            });
-
-            // If we get here, ESP32 found
-            esp32IP = ip;
-            if (esp32IPInput) {
-                esp32IPInput.value = ip;
-            }
-            localStorage.setItem('esp32IP', ip);
-            showNotification(`Found ESP32 at ${ip}`, 'success');
-            return;
-
-        } catch (e) {
-            continue;
-        }
-    }
-
-    showNotification('Could not auto-detect ESP32. Please enter IP manually.', 'error');
-}
-
-// Start the ESP32 stream
-async function startStream() {
-    if (!esp32IPInput) return;
-
-    const ip = esp32IPInput.value.trim();
-
-    if (!ip) {
-        showNotification('Please enter ESP32 IP address', 'error');
-        return;
-    }
-
-    esp32IP = ip;
-
-    // Save IP for future use
-    localStorage.setItem('esp32IP', esp32IP);
-
-    // Show loading
+// Start the relay stream
+function startStream() {
     if (streamPlaceholder) streamPlaceholder.style.display = 'none';
     if (streamLoading) streamLoading.style.display = 'flex';
-
-    try {
-        // Test connection
-        const testImg = new Image();
-        const testPromise = new Promise((resolve, reject) => {
-            testImg.onload = () => resolve(true);
-            testImg.onerror = () => reject(new Error('Cannot connect to ESP32'));
-            setTimeout(() => reject(new Error('Connection timeout')), 5000);
-        });
-
-        testImg.src = `http://${esp32IP}/stream?q=20&r=10&t=${Date.now()}`;
-        await testPromise;
-
-        // Update device info
-        if (deviceIP) deviceIP.textContent = `IP: ${esp32IP}`;
-
-        // Start the stream
-        if (streamPlaceholder) streamPlaceholder.style.display = 'none';
+    
+    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    const wsUrl = `${protocol}//${window.location.host}/ws/stream`;
+    
+    streamSocket = new WebSocket(wsUrl);
+    streamSocket.binaryType = 'blob'; // explicitly request Blob objects
+    
+    streamSocket.onopen = () => {
         if (streamLoading) streamLoading.style.display = 'none';
         if (streamDisplay) streamDisplay.style.display = 'block';
-
-        const quality = qualitySelect ? qualitySelect.value : '10';
-        const resolution = resolutionSelect ? resolutionSelect.value : '5';
-        const fps = fpsSelect ? fpsSelect.value : '50';
-
-        // Update indicators
-        if (resolutionIndicator) resolutionIndicator.textContent = getResolutionName(resolution);
-        if (streamQuality) streamQuality.textContent = `Quality: ${getQualityName(quality)}`;
-
-        // Start streaming
-        updateStream(quality, resolution, fps);
-
-        // Update UI
+        
         if (startStreamBtn) startStreamBtn.disabled = true;
         if (stopStreamBtn) stopStreamBtn.disabled = false;
-        if (captureBtn) captureBtn.disabled = false;
         isStreaming = true;
-
-        // Update connection status
-        if (connectionStatus) {
-            connectionStatus.innerHTML = `
-                <i class="fas fa-circle status-online"></i>
-                Connected
-            `;
-        }
-
+        
+        if (connectionStatus) connectionStatus.innerHTML = `<i class="fas fa-circle status-online"></i> Connected to Relay`;
+        if (deviceIP) deviceIP.textContent = `Status: Streaming`;
+        
         showNotification('Stream started successfully', 'success');
-
-    } catch (error) {
-        console.error('Stream start error:', error);
-        showNotification(`Connection failed: ${error.message}`, 'error');
-
-        // Reset UI
-        if (streamPlaceholder) streamPlaceholder.style.display = 'block';
-        if (streamLoading) streamLoading.style.display = 'none';
-        if (streamDisplay) streamDisplay.style.display = 'none';
-    }
-}
-
-// Update stream with current settings
-function updateStream(quality, resolution, fps) {
-    if (streamInterval) {
-        clearInterval(streamInterval);
-    }
-
-    // Load first frame
-    loadFrame(quality, resolution);
-
-    // Set up interval for streaming
-    streamInterval = setInterval(() => {
-        loadFrame(quality, resolution);
-        updateStreamStats();
-    }, parseInt(fps));
-}
-
-// Load a single frame
-function loadFrame(quality, resolution) {
-    if (!cameraStream) return;
-
-    const timestamp = Date.now();
-    cameraStream.src = `http://${esp32IP}/stream?q=${quality}&r=${resolution}&t=${timestamp}`;
-
-    // Record frame time for stats
-    frameTimes.push(performance.now());
-    if (frameTimes.length > 30) {
-        frameTimes.shift();
-    }
+    };
+    
+    streamSocket.onmessage = (event) => {
+        if (event.data instanceof Blob) {
+            const url = URL.createObjectURL(event.data);
+            if (cameraStream) {
+                if (cameraStream.src && cameraStream.src.startsWith('blob:')) {
+                    URL.revokeObjectURL(cameraStream.src);
+                }
+                cameraStream.src = url;
+            }
+            
+            frameTimes.push(performance.now());
+            if (frameTimes.length > 30) frameTimes.shift();
+            updateStreamStats();
+        }
+    };
+    
+    streamSocket.onclose = () => {
+        stopStream();
+        showNotification('Stream disconnected', 'error');
+    };
 }
 
 // Update streaming statistics
 function updateStreamStats() {
     if (!streamStats) return;
-
     if (frameTimes.length > 1) {
         const times = [];
         for (let i = 1; i < frameTimes.length; i++) {
             times.push(frameTimes[i] - frameTimes[i - 1]);
         }
-
         const avgDelay = Math.round(times.reduce((a, b) => a + b) / times.length);
         const avgFPS = Math.round(1000 / avgDelay);
-
         streamStats.textContent = `FPS: ${avgFPS} | Delay: ${avgDelay}ms`;
     }
 }
 
-// Stop the stream
+// Stop the relay stream
 function stopStream() {
-    if (streamInterval) {
-        clearInterval(streamInterval);
-        streamInterval = null;
+    if (streamSocket) {
+        streamSocket.close();
+        streamSocket = null;
     }
-
     isStreaming = false;
-
-    // Reset UI
+    
     if (streamDisplay) streamDisplay.style.display = 'none';
     if (streamPlaceholder) streamPlaceholder.style.display = 'block';
-
     if (startStreamBtn) startStreamBtn.disabled = false;
     if (stopStreamBtn) stopStreamBtn.disabled = true;
-    if (captureBtn) captureBtn.disabled = true;
-
-    if (connectionStatus) {
-        connectionStatus.innerHTML = `
-            <i class="fas fa-circle status-offline"></i>
-            Disconnected
-        `;
-    }
-
+    
+    if (connectionStatus) connectionStatus.innerHTML = `<i class="fas fa-circle status-offline"></i> Disconnected`;
+    if (deviceIP) deviceIP.textContent = `Status: Disconnected`;
     if (streamStats) streamStats.textContent = 'FPS: -- | Delay: --ms';
-
+    
     showNotification('Stream stopped', 'info');
 }
 
