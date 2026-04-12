@@ -31,6 +31,9 @@ const searchButton = document.getElementById('searchButton');
 let streamSocket = null;
 let isStreaming = false;
 let frameTimes = [];
+let esp32IP = ""; // Prevent ReferenceError in legacy init
+function detectESP32() {} // Prevent ReferenceError for removed function
+function updateStream() {} // Prevent ReferenceError
 
 // ============ STREAMING ELEMENTS ============
 // These will be initialized when needed
@@ -305,12 +308,11 @@ function initStreaming() {
                 clearInterval(streamInterval);
                 streamInterval = null;
             }
-        } else if (!document.hidden && isStreaming) {
+        } else if (!document.hidden && isStreaming && window.startStream) {
             // Resume stream when tab becomes visible
-            const quality = qualitySelect ? qualitySelect.value : '10';
-            const resolution = resolutionSelect ? resolutionSelect.value : '5';
-            const fps = fpsSelect ? fpsSelect.value : '50';
-            updateStream(quality, resolution, fps);
+            // Since it's a websocket, we simply restart the logic by simulating a stop/start
+            stopStream();
+            setTimeout(startStream, 500);
         }
     });
 
