@@ -35,6 +35,15 @@ let esp32IP = ""; // Prevent ReferenceError in legacy init
 function detectESP32() {} // Prevent ReferenceError for removed function
 function updateStream() {} // Prevent ReferenceError
 
+// ============ AUDIO VARIABLES ============
+let audioSocket = null;
+let isAudioConnected = false;
+let audioContext = null;
+let audioInputSource = null;
+let audioProcessor = null;
+let nextPlayTime = 0;
+let captureStream = null;
+
 // ============ STREAMING ELEMENTS ============
 // These will be initialized when needed
 let startStreamBtn = null;
@@ -62,6 +71,12 @@ let closePreviewBtn = null;
 let toggleLEDBtn = null;
 let rebootBtn = null;
 let calibrateBtn = null;
+
+// Voice GUI 
+let joinVoiceBtn = null;
+let leaveVoiceBtn = null;
+let voiceStatusIndicator = null;
+let voiceUsersSpan = null;
 
 // Initialize the application
 function init() {
@@ -248,6 +263,12 @@ function initStreaming() {
     rebootBtn = document.getElementById('rebootBtn');
     calibrateBtn = document.getElementById('calibrateBtn');
 
+    // Init Voice UI
+    joinVoiceBtn = document.getElementById('joinVoiceBtn');
+    leaveVoiceBtn = document.getElementById('leaveVoiceBtn');
+    voiceStatusIndicator = document.getElementById('voiceStatusIndicator');
+    voiceUsersSpan = document.getElementById('voiceUsersSpan');
+
     // Check if streaming elements exist
     if (!startStreamBtn) {
         console.error('Streaming elements not found!');
@@ -283,6 +304,10 @@ function initStreaming() {
     toggleLEDBtn?.addEventListener('click', toggleLED);
     rebootBtn?.addEventListener('click', rebootDevice);
     calibrateBtn?.addEventListener('click', calibrateCamera);
+
+    // Voice UI Event Listeners
+    joinVoiceBtn?.addEventListener('click', joinVoiceChat);
+    leaveVoiceBtn?.addEventListener('click', leaveVoiceChat);
 
     // Handle image load errors
     if (cameraStream) {
@@ -400,6 +425,125 @@ function stopStream() {
     if (streamStats) streamStats.textContent = 'FPS: -- | Delay: --ms';
     
     showNotification('Stream stopped', 'info');
+}
+
+// ============ VOICE CHAT SYSTEM ============
+
+async function joinVoiceChat() {
+    try {
+        captureStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        
+        // Setup WebSocket
+        const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+        const wsUrl = `${protocol}//${window.location.host}/ws/audio`;
+        audioSocket = new WebSocket(wsUrl);
+        audioSocket.binaryType = 'arraybuffer';
+        
+        audioSocket.onopen = () => {
+            isAudioConnected = true;
+            if (joinVoiceBtn) joinVoiceBtn.disabled = true;
+            if (leaveVoiceBtn) leaveVoiceBtn.disabled = false;
+            if (voiceStatusIndicator) voiceStatusIndicator.innerHTML = `<i class="fas fa-circle status-online"></i> Connected to Channel`;
+            showNotification('Joined Voice Chat', 'success');
+            
+            // Setup Web Audio API
+            audioContext = new (window.AudioContext || window.webkitAudioContext)({ sampleRate: 16000 });
+            nextPlayTime = audioContext.currentTime + 0.1;
+            
+            // Mute the local playback of your own microphone
+            const gainNode = audioContext.createGain();
+            gainNode.gain.value = 0;
+            
+            audioInputSource = audioContext.createMediaStreamSource(captureStream);
+            audioProcessor = audioContext.createScriptProcessor(4096, 1, 1);
+            
+            audioInputSource.connect(audioProcessor);
+            audioProcessor.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            // PCM format conversion: Float32 to Int16
+            audioProcessor.onaudioprocess = (e) => {
+                if (!isAudioConnected) return;
+                const inputData = e.inputBuffer.getChannelData(0);
+                const pcm16 = new Int16Array(inputData.length);
+                for (let i = 0; i < inputData.length; i++) {
+                    pcm16[i] = Math.max(-32768, Math.min(32767, inputData[i] * 32768));
+                }
+                
+                if (audioSocket && audioSocket.readyState === WebSocket.OPEN) {
+                    audioSocket.send(pcm16.buffer);
+                }
+            };
+        };
+        
+        audioSocket.onmessage = async (event) => {
+            if (!audioContext || !isAudioConnected) return;
+            try {
+                // PCM format conversion: Int16 to Float32
+                const int16Array = new Int16Array(event.data);
+                const float32Array = new Float32Array(int16Array.length);
+                for (let i = 0; i < int16Array.length; i++) {
+                    float32Array[i] = int16Array[i] / 32768;
+                }
+                
+                const audioBuffer = audioContext.createBuffer(1, float32Array.length, 16000);
+                audioBuffer.getChannelData(0).set(float32Array);
+                
+                const playSource = audioContext.createBufferSource();
+                playSource.buffer = audioBuffer;
+                playSource.connect(audioContext.destination);
+                
+                // Seamless scheduling
+                if (nextPlayTime < audioContext.currentTime) {
+                    nextPlayTime = audioContext.currentTime + 0.05;
+                }
+                playSource.start(nextPlayTime);
+                nextPlayTime += audioBuffer.duration;
+            } catch (err) {
+                console.error("Audio decode error:", err);
+            }
+        };
+        
+        audioSocket.onclose = () => {
+            leaveVoiceChat();
+        };
+        
+    } catch (err) {
+        console.error("Microphone access denied or error:", err);
+        showNotification('Microphone access required for Voice Chat', 'error');
+    }
+}
+
+function leaveVoiceChat() {
+    isAudioConnected = false;
+    
+    if (audioProcessor) {
+        audioProcessor.disconnect();
+        audioProcessor = null;
+    }
+    if (audioInputSource) {
+        audioInputSource.disconnect();
+        audioInputSource = null;
+    }
+    if (captureStream) {
+        captureStream.getTracks().forEach(track => track.stop());
+        captureStream = null;
+    }
+    if (audioContext) {
+        audioContext.close();
+        audioContext = null;
+    }
+    if (audioSocket) {
+        audioSocket.close();
+        audioSocket = null;
+    }
+    
+    if (joinVoiceBtn) joinVoiceBtn.disabled = false;
+    if (leaveVoiceBtn) leaveVoiceBtn.disabled = true;
+    if (voiceStatusIndicator) voiceStatusIndicator.innerHTML = `<i class="fas fa-circle status-offline"></i> Disconnected`;
+    if (voiceUsersSpan) voiceUsersSpan.textContent = '';
+    
+    showNotification('Left Voice Chat', 'info');
 }
 
 // Update stream quality

@@ -317,6 +317,30 @@
                                 </button>
                             </div>
                         </div>
+                        </div>
+                    </div>
+
+                    <!-- Voice Intercom Section -->
+                    <div class="voice-intercom-container" style="margin-top: 2rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.1);">
+                        <h3 style="margin-bottom: 1rem;"><i class="fas fa-headset"></i> Voice Intercom</h3>
+                        <p style="margin-bottom: 1rem; font-size: 0.9rem; color: #aaa;">Communicate with other connected viewers in real-time.</p>
+                        <div class="stream-controls" style="margin-bottom: 1rem; justify-content: flex-start;">
+                            <button class="stream-btn start" id="joinVoiceBtn">
+                                <i class="fas fa-microphone"></i>
+                                Join Voice Chat
+                            </button>
+                            <button class="stream-btn stop" id="leaveVoiceBtn" disabled>
+                                <i class="fas fa-microphone-slash"></i>
+                                Leave Chat
+                            </button>
+                        </div>
+                        <div class="stream-status">
+                            <span id="voiceStatusIndicator">
+                                <i class="fas fa-circle status-offline"></i>
+                                Disconnected
+                            </span>
+                            <span id="voiceUsersSpan" style="margin-left: 1rem; color: #a1a1aa;"></span>
+                        </div>
                     </div>
                 </div>
                 <div class="card-footer">

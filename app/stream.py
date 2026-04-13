@@ -6,6 +6,7 @@ router = APIRouter(tags=["stream"])
 
 # A global list to hold active viewing clients
 active_viewers: List[WebSocket] = []
+active_audio_viewers: List[WebSocket] = []
 
 @router.websocket("/ws/stream")
 async def video_stream(websocket: WebSocket):
@@ -20,6 +21,29 @@ async def video_stream(websocket: WebSocket):
     except Exception:
         if websocket in active_viewers:
             active_viewers.remove(websocket)
+
+@router.websocket("/ws/audio")
+async def audio_stream(websocket: WebSocket):
+    await websocket.accept()
+    active_audio_viewers.append(websocket)
+    try:
+        while True:
+            # Receive audio chunk
+            audio_chunk = await websocket.receive_bytes()
+            # Broadcast the audio chunk to all OTHER connected viewers
+            for viewer in active_audio_viewers.copy():
+                if viewer != websocket:
+                    try:
+                        await viewer.send_bytes(audio_chunk)
+                    except Exception:
+                        pass
+    except WebSocketDisconnect:
+        if websocket in active_audio_viewers:
+            active_audio_viewers.remove(websocket)
+    except Exception as e:
+        print(f"Audio disconnect: {e}")
+        if websocket in active_audio_viewers:
+            active_audio_viewers.remove(websocket)
 
 @router.websocket("/ws/camera")
 async def camera_stream(websocket: WebSocket):
